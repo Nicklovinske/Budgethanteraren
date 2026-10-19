@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public record Transaction(LocalDate date, TransactionCategory transactionCategory, double amount, TransactionType type) {
 
-    public Transaction{
+    public Transaction {
         Objects.requireNonNull(type, "Transaction type cannot be null");
         Objects.requireNonNull(transactionCategory, "Transaction category cannot be null");
         Objects.requireNonNull(amount, "Transaction amount cannot be null");
@@ -16,7 +16,7 @@ public record Transaction(LocalDate date, TransactionCategory transactionCategor
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String sign = type == TransactionType.INCOME ? "+" : "-";
         return String.format("%s %s %s %s", date, transactionCategory, sign, amount);
     }

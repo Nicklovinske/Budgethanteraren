@@ -15,6 +15,10 @@ public record Transaction(LocalDate date, TransactionCategory category, double a
             throw new IllegalArgumentException("Transaction amount must be greater than zero");
     }
 
+public String toCsv(){
+    return String.format("%s,%s,%.2f,%s", date, category, amount, type);
+}
+
 
     public static Transaction fromCsv(String csvLine) {
         String[] parts = csvLine.split(",");

@@ -3,6 +3,7 @@ package org.example.budgethanteraren;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -102,6 +103,18 @@ public class BudgetManager {
         }
     }
 
-    public void saveTofFile(){}
+    public void saveToFile(){
+        List<String> csvLines = transactions.stream()
+                .map(Transaction::toCsv)
+                .toList();
+
+        try{
+            Files.write(filePath, csvLines,
+                    StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING);
+        }
+        catch (IOException e){
+            IO.println("Could not write to file '" + e.getMessage());
+        }
+    }
 
 }

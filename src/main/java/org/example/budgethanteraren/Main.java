@@ -103,5 +103,51 @@ public class Main {
             List<Transaction> results = budgetManager.filterByDateIntervalSorted(start, end, ascending);
             printTransactionList("Filtered by Date Interval " + start + " to " + end, results);
         }
+
+        private static void printTransactionList(String title, List<Transaction> list){
+            IO.println("\n=== " + title + " ===");
+            if (list.isEmpty()){
+                IO.println("No transactions found.");
+                return;
+            }
+            list.forEach(IO::println);
+
     }
+
+        private static TransactionCategory selectCategory(){
+            TransactionCategory[] categories = TransactionCategory.values();
+            IO.println("Select a category: ");
+            for(int i = 0; i < categories.length; i++){
+                IO.println((i+1) + ". " + categories[i]);
+            }
+            while(true){
+                int choice = readInt("Choice (1-" + categories.length + "): ");
+                if(choice >= 1 && choice <= categories.length){
+                    return categories[choice-1];
+                }
+                IO.println("Invalid choice. Please pick a number between 1 and " + categories.length + ".");
+            }
+        }
+
+        private static boolean readSortOrder(){
+            IO.println("Sort order by date: ");
+            IO.println("1. Ascending");
+            IO.println("2. Descending");
+            return readInt("Choice (1-2): ") != 2;
+        }
+
+        private static int readInt(String prompt){
+            while(true){
+                IO.println(prompt);
+                String input = IO.readln().trim();
+                try{
+                    return Integer.parseInt(input);
+                }catch(NumberFormatException e){
+                    IO.println("Invalid input. Please enter a valid number.");
+                }
+            }
+        }
+}
+
+
 

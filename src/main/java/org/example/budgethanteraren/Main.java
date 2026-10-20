@@ -1,6 +1,7 @@
 package org.example.budgethanteraren;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -58,8 +59,8 @@ public class Main {
     }
 
     private static void handleShowSummary(){
-        double totalIncome = budgetManager.getTotalIncome();
-        double totalExpense = budgetManager.getTotalExpense();
+        double totalIncome = budgetManager.getTotalByType(TransactionType.INCOME);
+        double totalExpense = budgetManager.getTotalByType(TransactionType.EXPENSE);
         double balance = budgetManager.getBalance();
 
         IO.println("\n--- Summary ---");
@@ -144,6 +145,34 @@ public class Main {
                     return Integer.parseInt(input);
                 }catch(NumberFormatException e){
                     IO.println("Invalid input. Please enter a valid number.");
+                }
+            }
+        }
+
+        private static double readPositiveDouble(String prompt){
+        while(true){
+            IO.println(prompt);
+            String input = IO.readln().trim().replace(',','.');
+            try{
+                double value = Double.parseDouble(input);
+                if(value >= 0 && !Double.isInfinite(value)){
+                    return value;
+                }
+                IO.println("Invalid input. Please enter a positive number.");
+            }catch(NumberFormatException e){
+                IO.println("Invalid input. Please enter a valid number.");
+            }
+        }
+        }
+
+        private static LocalDate readDate(String prompt){
+            while(true){
+                IO.println(prompt);
+                String input = IO.readln().trim();
+                try{
+                    return LocalDate.parse(input);
+                }catch(DateTimeParseException e){
+                    IO.println("Invalid input. Please enter a valid date in the format YYYY-MM-DD.");
                 }
             }
         }

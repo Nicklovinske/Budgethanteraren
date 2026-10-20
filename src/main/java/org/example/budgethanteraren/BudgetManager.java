@@ -116,5 +116,4 @@ public class BudgetManager {
             IO.println("Could not write to file '" + e.getMessage());
         }
     }
-
 }

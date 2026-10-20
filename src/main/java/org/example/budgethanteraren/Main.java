@@ -1,6 +1,8 @@
 package org.example.budgethanteraren;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
     private static final BudgetManager budgetManager = new BudgetManager("transactions.csv");
@@ -64,5 +66,42 @@ public class Main {
         IO.println("Total Income: " + totalIncome);
         IO.println("Total Expense: " + totalExpense);
         IO.println("Balance: " + balance);
+
+        Map<TransactionCategory, Double> categoryTotals = budgetManager.getSumPerCategory();
+        IO.println("\n--- Total per Category ---");
+        if (categoryTotals.isEmpty()){
+            IO.println("No transactions found.");
+        }else{
+            categoryTotals.forEach((category, sum) -> IO.println(category + ": " + sum));
+        }
     }
-}
+
+    private static void handleFilterByType(){
+        IO.println("\n--- Filter by Type ---");
+        IO.println("1. Income");
+        IO.println("2. Expense");
+
+        TransactionType selectedType = (readInt("Choice (1-2): ")== 1)
+                ? TransactionType.INCOME
+                : TransactionType.EXPENSE;
+
+        boolean ascending =  readSortOrder();
+        List<Transaction> results = budgetManager.filterByTypeSorted(selectedType, ascending);
+        printTransactionList("Filtered by " + selectedType, results);
+        }
+
+        private static void handleFilterByDateInterval(){
+            IO.println("\n--- Filter by Date Interval ---");
+            LocalDate start = readDate("Enter start date (YYYY-MM-DD): ");
+            LocalDate end = readDate("Enter end date (YYYY-MM-DD): ");
+
+            if(end.isBefore(start)){
+                IO.println("End date cannot be before start date.");
+            }
+
+            boolean ascending = readSortOrder();
+            List<Transaction> results = budgetManager.filterByDateIntervalSorted(start, end, ascending);
+            printTransactionList("Filtered by Date Interval " + start + " to " + end, results);
+        }
+    }
+

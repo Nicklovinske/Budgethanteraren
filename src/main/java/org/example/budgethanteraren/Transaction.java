@@ -12,7 +12,7 @@ public record Transaction(LocalDate date, TransactionCategory category, double a
         Objects.requireNonNull(date, "Transaction date cannot be null");
 
         if (amount <= 0)
-            throw new IllegalArgumentException("Transaction amount must be greater than zero");
+            throw new InvalidTransactionException("Transaction amount must be greater than zero");
     }
 
 public String toCsv(){

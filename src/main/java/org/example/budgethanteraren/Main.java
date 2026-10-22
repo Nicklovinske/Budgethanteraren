@@ -2,8 +2,10 @@ package org.example.budgethanteraren;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Main {
     private static final BudgetManager budgetManager = new BudgetManager("transactions.csv");
@@ -45,7 +47,7 @@ public class Main {
         IO.println("5. Filter by Type");
         IO.println("6. Filter by Date Interval");
         IO.println("7. Open the airlock doors");
-        IO.println("8. Exit without saving");
+        IO.println("8. Exit");
     }
 
     private static void handleAddTransaction(TransactionType type){
@@ -119,17 +121,19 @@ public class Main {
     }
 
         private static TransactionCategory selectCategory(){
-            TransactionCategory[] categories = TransactionCategory.values();
+            List<TransactionCategory> expenseCategories = Arrays.stream(TransactionCategory.values())
+                    .filter(category -> category != TransactionCategory.SALARY)
+                    .collect(Collectors.toList());
             IO.println("Select a category: ");
-            for(int i = 0; i < categories.length; i++){
-                IO.println((i+1) + ". " + categories[i]);
+            for(int i = 0; i < expenseCategories.size(); i++){
+                IO.println((i + 1) + ". " + expenseCategories.get(i));
             }
             while(true){
-                int choice = readInt("Choice (1-" + categories.length + "): ");
-                if(choice >= 1 && choice <= categories.length){
-                    return categories[choice-1];
+                int choice = readInt("Category number: ");
+                if(choice >= 1 && choice <= expenseCategories.size()){
+                    return expenseCategories.get(choice-1);
                 }
-                IO.println("Invalid choice. Please pick a number between 1 and " + categories.length + ".");
+                IO.println("Invalid choice. Please pick a number between 1 and " + expenseCategories.size() + ".");
             }
         }
 

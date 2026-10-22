@@ -51,7 +51,10 @@ public class Main {
     private static void handleAddTransaction(TransactionType type){
         IO.println("\n--- Add " + type + " ---");
         LocalDate date = readDate("Enter date (YYYY-MM-DD) or press Enter for today: ");
-        TransactionCategory category = selectCategory();
+
+        TransactionCategory category = (type == TransactionType.INCOME)
+                ? TransactionCategory.SALARY
+                :selectCategory();
         double amount = readPositiveDouble("Enter amount: ");
 
         budgetManager.addTransaction(date, category, amount, type);
@@ -169,6 +172,8 @@ public class Main {
             while(true){
                 IO.println(prompt);
                 String input = IO.readln().trim();
+                if (input.isBlank())
+                    return LocalDate.now();
                 try{
                     return LocalDate.parse(input);
                 }catch(DateTimeParseException e){

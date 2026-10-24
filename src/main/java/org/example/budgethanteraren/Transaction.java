@@ -2,7 +2,6 @@ package org.example.budgethanteraren;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.Locale;
 import java.util.Objects;
 
 public record Transaction(LocalDate date, TransactionCategory category, double amount, TransactionType type) {
@@ -44,11 +43,11 @@ public record Transaction(LocalDate date, TransactionCategory category, double a
     }
 
 
-        @Override
-        public String toString () {
-            String sign = (type == TransactionType.INCOME) ? "+" : "-";
-            return String.format("%s, %s, %.2f, %s", date, category, amount, type);
-        }
+    @Override
+    public String toString() {
+        String sign = (type == TransactionType.INCOME) ? "+" : "-";
+        return String.format("%s, %s, %.2f, %s", date, category, amount, type);
     }
+}
 
 

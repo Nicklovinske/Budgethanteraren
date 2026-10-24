@@ -64,7 +64,7 @@ class TransactionTest {
     @Test
     @DisplayName("Throws exception on incorrect CSV line")
     void shouldThrowExceptionOnIncorrectCSVLine() {
-        String wrongColumns= "2026-10-22,GROCERIES,100.00";
+        String wrongColumns = "2026-10-22,GROCERIES,100.00";
         String badDate = "Bananas,GROCERIES,100.00,EXPENSE";
         String unknownCategory = "2026-10-22,RED_SHOELACES,100.00,EXPENSE";
 

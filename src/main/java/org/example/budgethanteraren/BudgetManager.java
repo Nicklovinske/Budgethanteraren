@@ -12,52 +12,50 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.sun.tools.jdeprscan.DeprDB.loadFromFile;
-
 public class BudgetManager {
     private final List<Transaction> transactions = new ArrayList<>();
     private final Path filePath;
 
-    public BudgetManager(String fileName){
+    public BudgetManager(String fileName) {
         this.filePath = Path.of(fileName);
         loadFromFile();
     }
 
-    public void addTransaction(LocalDate date, TransactionCategory category, double amount, TransactionType type){
+    public void addTransaction(LocalDate date, TransactionCategory category, double amount, TransactionType type) {
         Transaction transaction = new Transaction(date, category, amount, type);
         transactions.add(transaction);
         saveToFile();
     }
 
-    public List<Transaction> getAllTransactions(){
+    public List<Transaction> getAllTransactions() {
         return List.copyOf(transactions);
     }
 
-    public double getTotalByType(TransactionType type){
+    public double getTotalByType(TransactionType type) {
         return transactions.stream()
                 .filter(t -> t.type() == type)
                 .mapToDouble(Transaction::amount)
                 .sum();
     }
 
-    public double getBalance(){
+    public double getBalance() {
         return getTotalByType(TransactionType.INCOME) - getTotalByType(TransactionType.EXPENSE);
     }
 
-    public Map<TransactionCategory, Double> getSumPerCategory(){
+    public Map<TransactionCategory, Double> getSumPerCategory() {
         return transactions.stream()
                 .collect(Collectors.groupingBy(
                         Transaction::category,
                         Collectors.summingDouble(Transaction::amount)));
     }
 
-    public List<Transaction> filterByTypeSorted(TransactionType type, boolean ascendingDate){
-        if (type == null){
+    public List<Transaction> filterByTypeSorted(TransactionType type, boolean ascendingDate) {
+        if (type == null) {
             throw new InvalidTransactionException("Transaction type cannot be null");
         }
 
         Comparator<Transaction> comparator = Comparator.comparing(Transaction::date);
-        if (!ascendingDate){
+        if (!ascendingDate) {
             comparator = comparator.reversed();
         }
         return transactions.stream()
@@ -66,16 +64,16 @@ public class BudgetManager {
                 .toList();
     }
 
-    public List<Transaction> filterByDateIntervalSorted(LocalDate startDate, LocalDate endDate, boolean ascendingDate){
-        if (startDate == null || endDate == null){
+    public List<Transaction> filterByDateIntervalSorted(LocalDate startDate, LocalDate endDate, boolean ascendingDate) {
+        if (startDate == null || endDate == null) {
             throw new InvalidTransactionException("Start date and end date cannot be null");
         }
-        if (endDate.isBefore(startDate)){
+        if (endDate.isBefore(startDate)) {
             throw new InvalidTransactionException("End date cannot be before start date");
         }
 
         Comparator<Transaction> comparator = Comparator.comparing(Transaction::date);
-        if (!ascendingDate){
+        if (!ascendingDate) {
             comparator = comparator.reversed();
         }
         return transactions.stream()
@@ -84,9 +82,9 @@ public class BudgetManager {
                 .toList();
     }
 
-    public final void loadFromFile(){
-        try{
-            if (Files.notExists(filePath)){
+    public final void loadFromFile() {
+        try {
+            if (Files.notExists(filePath)) {
                 Files.createFile(filePath);
                 IO.println("Created new budget file: " + filePath);
                 return;
@@ -95,35 +93,33 @@ public class BudgetManager {
             List<String> lines = Files.readAllLines(filePath);
             int lineNumber = 0;
 
-            for (String line: lines){
+            for (String line : lines) {
                 lineNumber++;
-                if (line.isBlank()){
+                if (line.isBlank()) {
                     continue;
                 }
-                try{
+                try {
                     transactions.add(Transaction.fromCsv(line));
-                } catch (IllegalArgumentException | DateTimeParseException e){
+                } catch (IllegalArgumentException | DateTimeParseException e) {
                     IO.println("Error parsing line " + lineNumber + ": " + e.getMessage());
                 }
             }
             IO.println("Loaded " + transactions.size() + " transaction(s)");
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             IO.println("Could not read or create file '" + filePath + "':" + e.getMessage());
             IO.println("Starting with an empty in-memory budget instead.");
         }
     }
 
-    public void saveToFile(){
+    public void saveToFile() {
         List<String> csvLines = transactions.stream()
                 .map(Transaction::toCsv)
                 .toList();
 
-        try{
+        try {
             Files.write(filePath, csvLines,
-                    StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING);
-        }
-        catch (IOException e){
+                    StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
             IO.println("Could not write to file '" + e.getMessage());
         }
     }

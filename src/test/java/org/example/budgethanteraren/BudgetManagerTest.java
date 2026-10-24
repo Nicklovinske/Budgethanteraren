@@ -32,9 +32,9 @@ public class BudgetManagerTest {
     @DisplayName("Accurately calculates total income, expense and net balance")
     void shouldCalculateTotalIncomeExpenseAndNetBalance() {
         LocalDate date = LocalDate.of(2026, 10, 22);
-        manager.addTransaction(date, TransactionCategory.SALARY, 30000.00,TransactionType.INCOME);
-        manager.addTransaction(date, TransactionCategory.HOUSING, 6900.00,TransactionType.EXPENSE);
-        manager.addTransaction(date, TransactionCategory.GROCERIES, 1000.00,TransactionType.EXPENSE);
+        manager.addTransaction(date, TransactionCategory.SALARY, 30000.00, TransactionType.INCOME);
+        manager.addTransaction(date, TransactionCategory.HOUSING, 6900.00, TransactionType.EXPENSE);
+        manager.addTransaction(date, TransactionCategory.GROCERIES, 1000.00, TransactionType.EXPENSE);
 
         double totalIncome = manager.getTotalByType(TransactionType.INCOME);
         double totalExpense = manager.getTotalByType(TransactionType.EXPENSE);
@@ -47,7 +47,7 @@ public class BudgetManagerTest {
 
     @Test
     @DisplayName("Empy transaction list returns 0 balance and empty maps/lists")
-    void shouldHandleEmptryTransactionList(){
+    void shouldHandleEmptryTransactionList() {
         double balance = manager.getBalance();
         double income = manager.getTotalByType(TransactionType.INCOME);
 
@@ -62,8 +62,8 @@ public class BudgetManagerTest {
 
     @Test
     @DisplayName("Stream groups and sums amounts per category accurately")
-    void shouldGroupAndSumPerCategory(){
-        LocalDate date = LocalDate.of(2026,10,23);
+    void shouldGroupAndSumPerCategory() {
+        LocalDate date = LocalDate.of(2026, 10, 23);
         manager.addTransaction(date, TransactionCategory.GROCERIES, 120.50, TransactionType.EXPENSE);
         manager.addTransaction(date, TransactionCategory.GROCERIES, 279.50, TransactionType.EXPENSE);
         manager.addTransaction(date, TransactionCategory.UTILITIES, 500.00, TransactionType.EXPENSE);
@@ -78,7 +78,7 @@ public class BudgetManagerTest {
 
     @Test
     @DisplayName("Filters by date interval (including boundary dates) and sorts")
-    void shouldFilterByDateIntervalInclusiveAndSortDescending(){
+    void shouldFilterByDateIntervalInclusiveAndSortDescending() {
         LocalDate oct1 = LocalDate.of(2026, 10, 1);
         LocalDate oct15 = LocalDate.of(2026, 10, 15);
         LocalDate oct31 = LocalDate.of(2026, 10, 31);
@@ -99,16 +99,16 @@ public class BudgetManagerTest {
 
     @Test
     @DisplayName("Throws InvalidTransactionException when end date is before start date or null")
-    void shouldThrowInvalidTransactionExceptionForInvalidDateInterval(){
-        LocalDate start = LocalDate.of(2026,10,20);
-        LocalDate endBeforeStart = LocalDate.of(2026,10,10);
+    void shouldThrowInvalidTransactionExceptionForInvalidDateInterval() {
+        LocalDate start = LocalDate.of(2026, 10, 20);
+        LocalDate endBeforeStart = LocalDate.of(2026, 10, 10);
 
         assertThrows(InvalidTransactionException.class, () ->
                 manager.filterByDateIntervalSorted(start, endBeforeStart, true));
         assertThrows(InvalidTransactionException.class, () ->
                 manager.filterByDateIntervalSorted(null, start, true));
         assertThrows(InvalidTransactionException.class, () ->
-                manager.filterByTypeSorted(null,true));
+                manager.filterByTypeSorted(null, true));
 
     }
 

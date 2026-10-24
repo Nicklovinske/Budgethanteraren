@@ -118,9 +118,9 @@ public class BudgetManagerTest {
         Path customCsv = tempDir.resolve("corrupted_and_valid.csv");
         List<String> lines = List.of(
                 "2026-10-01,SALARY,25000.00,INCOME",
-                "corrupted-date,FOOD,-100,EXPENSE",
+                "corrupted-date,GROCERIES,-100,EXPENSE",
                 "broken_line_without_commas",
-                "2026-10-05,FOOD,300.00,EXPENSE");
+                "2026-10-05,GROCERIES,300.00,EXPENSE");
 
         Files.write(customCsv, lines);
         BudgetManager reloadedManager = new BudgetManager(customCsv.toString());

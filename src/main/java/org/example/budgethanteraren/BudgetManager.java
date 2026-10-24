@@ -52,6 +52,10 @@ public class BudgetManager {
     }
 
     public List<Transaction> filterByTypeSorted(TransactionType type, boolean ascendingDate){
+        if (type == null){
+            throw new InvalidTransactionException("Transaction type cannot be null");
+        }
+
         Comparator<Transaction> comparator = Comparator.comparing(Transaction::date);
         if (!ascendingDate){
             comparator = comparator.reversed();
@@ -63,12 +67,19 @@ public class BudgetManager {
     }
 
     public List<Transaction> filterByDateIntervalSorted(LocalDate startDate, LocalDate endDate, boolean ascendingDate){
+        if (startDate == null || endDate == null){
+            throw new InvalidTransactionException("Start date and end date cannot be null");
+        }
+        if (endDate.isBefore(startDate)){
+            throw new InvalidTransactionException("End date cannot be before start date");
+        }
+
         Comparator<Transaction> comparator = Comparator.comparing(Transaction::date);
         if (!ascendingDate){
             comparator = comparator.reversed();
         }
         return transactions.stream()
-                .filter(t -> t.date().isBefore(startDate) && t.date().isAfter(endDate))
+                .filter(t -> !t.date().isBefore(startDate) && !t.date().isAfter(endDate))
                 .sorted(comparator)
                 .toList();
     }

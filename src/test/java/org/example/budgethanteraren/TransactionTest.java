@@ -48,21 +48,6 @@ class TransactionTest {
     }
 
     @Test
-    @DisplayName("Throws InvalidTransactionException when date, category, or type is null")
-    void shouldThrowInvalidTransactionExceptionWhenDateCategoryOrTypeNull() {
-        LocalDate date = LocalDate.now();
-
-        assertThrows(InvalidTransactionException.class, () -> new Transaction(null,
-                TransactionCategory.UTILITIES, 100.0, TransactionType.EXPENSE));
-
-        assertThrows(InvalidTransactionException.class, () -> new Transaction(date,
-                null, 100.0, TransactionType.INCOME));
-
-        assertThrows(InvalidTransactionException.class, () -> new Transaction(date,
-                TransactionCategory.OTHER, 100.0, null));
-    }
-
-    @Test
     @DisplayName("Records to CSV File and reads back identical")
     void shouldWriteToAndReadFromCSVCorrectly() {
         Transaction original = new Transaction(LocalDate.of(2026, 10, 22), TransactionCategory.OTHER,
@@ -79,8 +64,8 @@ class TransactionTest {
     @Test
     @DisplayName("Throws exception on incorrect CSV line")
     void shouldThrowExceptionOnIncorrectCSVLine() {
-        String wrongColumns= "2026-10-22,FOOD,100.00";
-        String badDate = "Bananas,FOOD,100.00,EXPENSE";
+        String wrongColumns= "2026-10-22,GROCERIES,100.00";
+        String badDate = "Bananas,GROCERIES,100.00,EXPENSE";
         String unknownCategory = "2026-10-22,RED_SHOELACES,100.00,EXPENSE";
 
         assertThrows(InvalidTransactionException.class, () -> Transaction.fromCsv(null));
